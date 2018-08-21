@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		
+<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Khula:700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Anton|Baloo+Bhai|Jua|Lato" rel="stylesheet">
+		<title>TELL ME WHAT YOU WANT, WHAT YOU REALLY REALLY WANT</title>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+		<style>
+		* {
+			cursor: url(rose.cur), auto;
+		}
+			body {
+				background-color: rgb(200,200,200);
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				top:150px;
+				position: absolute;
+			 width: 100%;
+				color: #ffffff;
+				padding: 5px;
+			
+				font-size:13px;
+				z-index: 2;
+				text-align:center;
+			}
+			
+       #area {
+       
+        font-size: 100px;
+
+	 border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    cursor: text;
+
+      }
+        #boton {
+
+    border: 2px solid violet;
+    border-radius: 5px;
+    background-color:transparent;
+    color: #33FFF6;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+   font-style: italic;
+
+}
+			}
+		</style>
+
+
+
+		<script src="js/three.js"></script>
+		<script src="js/Projector.js"></script>
+		<script src="js/CanvasRenderer.js"></script>
+     
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/modernizr.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+		<script>
+
+			var camera, scene, renderer;
+
+			var texture_placeholder,
+			isUserInteracting = false,
+			onMouseDownMouseX = 0, onMouseDownMouseY = 0,
+			lon = 90, onMouseDownLon = 0,
+			lat = 0, onMouseDownLat = 0,
+			phi = 0, theta = 0,
+			target = new THREE.Vector3();
+
+
+			var fortuna = [ "Monumentos, cuidados unos, monumentos, olvidados otros",
+			 			    "Monumentos, cuidados unos, monumentos, olvidados otros",
+			       	        "Monumentos olvidados en la Ciudad",
+			                "Monumentos huérfanos",
+			       	        "Indigentes de bronce"]
+			       
+			var fuentes = [ 'Abril Fatface', 
+							'Anton', 
+							'Baloo Bhai', 
+							'Jua', 
+							'Lato' ]
+
+ 			var color = [   'White', 
+							'Aqua',
+							'Aquamarine', 
+							'Yellow',
+							'IndianRed',
+							'Khaki',
+							'LightCyan',
+							'LightSalmon',
+							'LightSkyBlue',
+							'Lime',
+							'MediumAquamarine',
+							'MediumPurple',
+							'MediumVioletRed',
+							'MistyRose',
+							'Moccasin',
+							'PaleVioletRed',
+							'Orchid',
+							'Pink',
+							'PaleTurquoise',
+							'Plum',
+							'Salmon',
+							'SkyBlue',
+							'Violet',
+							'YellowGreen' 
+							]
+
+		
+
+			function init() {
+
+				var container, mesh;
+
+				container = document.getElementById( 'container' );
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
+
+				scene = new THREE.Scene();
+
+				texture_placeholder = document.createElement( 'canvas' );
+				texture_placeholder.width = 128;
+				texture_placeholder.height = 128;
+
+				var context = texture_placeholder.getContext( '2d' );
+				context.fillStyle = 'rgb( 200, 200, 200 )';
+				context.fillRect( 0, 0, texture_placeholder.width, texture_placeholder.height );
+
+				var materials = [
+
+					loadTexture( 'textures/cube/MilkyWay/px.jpg' ), // right
+					loadTexture( 'textures/cube/MilkyWay/nx.jpg' ), // left
+					loadTexture( 'textures/cube/MilkyWay/py.jpg' ), // top
+					loadTexture( 'textures/cube/MilkyWay/ny.jpg' ), // bottom
+					loadTexture( 'textures/cube/MilkyWay/pz.jpg' ), // back
+					loadTexture( 'textures/cube/MilkyWay/nz.jpg' )  // front
+
+				];
+
+				var geometry = new THREE.BoxGeometry( 300, 300, 300, 7, 7, 7 );
+				geometry.scale( - 1, 1, 1 );
+
+				mesh = new THREE.Mesh( geometry, materials );
+				scene.add( mesh );
+
+				renderer = new THREE.CanvasRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				
+
+			}
+
+		
+function capa() {
+    document.getElementById("info").style.zIndex = "2";
+}
+			function loadTexture( path ) {
+
+				var texture = new THREE.Texture( texture_placeholder );
+				var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+
+				var image = new Image();
+				image.onload = function () {
+
+					texture.image = this;
+					texture.needsUpdate = true;
+
+				};
+				image.src = path;
+
+				return material;
+
+			}
+
+						
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				update();
+
+			}
+
+			function update() {
+
+				if ( isUserInteracting === false ) {
+
+					lon += 0.1;
+
+				}
+
+				lat = Math.max( - 85, Math.min( 85, lat ) );
+				phi = THREE.Math.degToRad( 90 - lat );
+				theta = THREE.Math.degToRad( lon );
+
+				target.x = 500 * Math.sin( phi ) * Math.cos( theta );
+				target.y = 500 * Math.cos( phi );
+				target.z = 500 * Math.sin( phi ) * Math.sin( theta );
+
+				camera.lookAt( target );
+
+				renderer.render( scene, camera );
+
+			}
+	
+
+
+
+			function changeProperty(mine, css){ 
+			          $(mine).css(css);
+			       }
+
+			function randomFuente(){
+			    return fuentes[Math.floor(Math.random()*fuentes.length)];
+			  }
+
+			function randomColor(){
+			    return color[Math.floor(Math.random()*color.length)];
+			  }
+
+			function randomTexto(){
+			    return fortuna[Math.floor(Math.random()*fortuna.length)];
+			  }
+
+			function myFunction(){
+
+            var mirar = $('#area').val();
+
+   
+			if (mirar == "")
+			{
+				alert("Escribe lo que deseas, Cariñito");
+			}
+			else
+			{
+
+				var fullWidth = window.innerWidth;
+		        var fullHeight = window.innerHeight;
+		    
+		        var text = randomTexto();
+		    
+		       var elem = document.createElement("div");
+		
+		   
+			   elem.textContent = text;
+			   elem.style.position = "absolute";
+			   elem.style.color = randomColor();
+			   elem.style.fontSize =  Math.floor((Math.random() * 25) + 10) + "px";
+			   elem.style.right = Math.round(Math.random() * fullWidth) + "px";
+			   elem.style.top = Math.round(Math.random() * fullHeight) + "px";
+
+			   Math.floor(Math.random()*fuentes.length)
+
+			   changeProperty(elem, {'font-family' : randomFuente()});
+
+			 // changeProperty(elem, {'z-index' : 1});
+
+
+			   console.log( "Noticias: ",elem);
+
+			   document.body.appendChild(elem);
+
+		      $('#area').val("");
+			}
+		   
+		}
+
+		setTimeout(function(){
+		   window.location.reload(1);
+		}, 300000);
+
+
+		</script>
+
+
+
+	</head>
+	<body>
+
+		<div id="container" class="container" style="z-index: -1"> 
+		
+		
+        <div id="info">
+        	
+			<img src="tellme.gif" alt="tellme">
+				<br>
+				<br>
+				<br>
+				<br>
+		   		 <textarea id="area" name="message" rows="1"  ></textarea>
+		   		 <br>
+		   		  <br>
+		   		  <br>
+		   		  <br>
+           		 <input id="boton" type="submit" onclick="myFunction()" value="ME SIENTO CON SUERTE">
+       	</div>
+       
+
+        <script type="text/javascript">
+	        init();
+			animate();
+
+       </script>
+	
+
+		
+	</body>
+</html>
+
+
+
