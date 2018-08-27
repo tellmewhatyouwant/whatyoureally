@@ -45,7 +45,7 @@
 
     border: 2px solid violet;
     border-radius: 5px;
-    background-color:transparent;
+    background-color:midnightblue;
     color: #33FFF6;
     padding: 15px 32px;
     text-align: center;
@@ -57,7 +57,69 @@
    font-style: italic;
 
 }
-			}
+
+
+
+.hero-unit {
+  margin: 50px auto 0 auto;
+  width: 300px;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 30px;
+  background-color: #eee;
+  border-radius: 6px;
+  padding: 60px;
+}
+
+.hero-unit h1 {
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+/* ESTILOS HEADER  / ABOUT */
+header{
+  position: fixed;
+  top:0px;
+  left: 10px;
+  z-index: 10;
+}
+header h1 {
+  cursor: pointer;
+  margin: 0;
+}
+
+
+#hover{
+	font-family: Courier New;
+	font-size: 15px;
+	color: white;
+	z-index: 3;
+}
+#about{
+  position: fixed;
+  top: -600px;
+  left:0;
+  text-align: justify;
+  padding: 60px 20px 10px 10px; /* padding de la caja (margen interior)  en este caso 40px es el padding superior y el resto (derecha, abajo, izquierda)*/
+  height: 360px; /* alto de la caja */
+  width: 400px; /* ancho de la caja */
+  border: 1px solid #000000; /* color del borde en hexadecimal de la caja */
+  border-top: none;
+  border-left: none;
+  transition: all 0.5s ease;
+  background-color: #fff;/* color de fondo de la caja */
+   overflow-y: auto;
+}
+
+
+
+
+.mostrar{
+  top:0!important;
+}
+
+
+
 		</style>
 
 
@@ -68,6 +130,7 @@
      
         <script src="scripts/jquery.js"></script>
         <script src="scripts/modernizr.js"></script>
+
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -83,13 +146,48 @@
 			phi = 0, theta = 0,
 			target = new THREE.Vector3();
 
+     
 
-			var fortuna = [ "Monumentos, cuidados unos, monumentos, olvidados otros",
-			 			    "Monumentos, cuidados unos, monumentos, olvidados otros",
-			       	        "Monumentos olvidados en la Ciudad",
-			                "Monumentos huérfanos",
-			       	        "Indigentes de bronce"]
+			var fortuna = [ "Si quieres puedes, campeón",
+							"thumbsup.gif",
+			 			    "Ánimo, tu puedes con eso",
+			 			    "pat.gif",
+			       	        "Creo en ti",
+			       	        "high5.gif",
+			                "YOLO",
+			                "just.gif",
+							"¡A la bio a la bao a la bin bon bao!",						
+							"Buena suerte con eso",
+							"Tal vez lo logres",
+							"happy.gif",
+							"ENTUSIASMOOOOOOOO!",
+							"La patadita de la buena suerte!",
+							"panda.gif",
+							"Nunca te rindas",
+							"ok...",
+							"maybe.gif",
+							"yeah, nice",
+							"no se que pasará, pero te deseo suerte",
+							"cool wish!",
+							"Espero que lo logres",
+							"Nunca es tarde Corazón",
+							"thumbs up",
+							"pos.gif",
+							"face.gif",
+							"maypsycho.gif",
+							"idk.gif",
+							"CHOCALAS!",
+							"coolbro.gif",
+							"nice.gif",
+							"sure.gif",
+							"ok.gif",
+							"right.gif",
+							"youcan.gif",
+							"never.gif"
+			       	        ]
 			       
+            
+
 			var fuentes = [ 'Abril Fatface', 
 							'Anton', 
 							'Baloo Bhai', 
@@ -170,7 +268,9 @@
 
 		
 function capa() {
+
     document.getElementById("info").style.zIndex = "2";
+    
 }
 			function loadTexture( path ) {
 
@@ -237,10 +337,13 @@ function capa() {
 			  }
 
 			function randomTexto(){
-			    return fortuna[Math.floor(Math.random()*fortuna.length)];
+				var tem = fortuna[Math.floor(Math.random()*fortuna.length)];
+			    return tem;
 			  }
 
 			function myFunction(){
+				 document.getElementById("hover").style.zIndex = "3";
+  				document.getElementById("about").style.zIndex = "4";
 
             var mirar = $('#area').val();
 
@@ -256,29 +359,65 @@ function capa() {
 		        var fullHeight = window.innerHeight;
 		    
 		        var text = randomTexto();
-		    
-		       var elem = document.createElement("div");
-		
-		   
-			   elem.textContent = text;
-			   elem.style.position = "absolute";
-			   elem.style.color = randomColor();
-			   elem.style.fontSize =  Math.floor((Math.random() * 25) + 10) + "px";
-			   elem.style.right = Math.round(Math.random() * fullWidth) + "px";
-			   elem.style.top = Math.round(Math.random() * fullHeight) + "px";
 
-			   Math.floor(Math.random()*fuentes.length)
+		        var largo = text.length;
+		        var pedazo = text.substring(largo - 3, largo);
 
-			   changeProperty(elem, {'font-family' : randomFuente()});
+		        if (pedazo == 'gif')
+		        {
+
+		           var elem = document.createElement("div");
+			       elem.style.position = "absolute";
+			      
+			       elem.style.right = Math.round(Math.random() * fullWidth) + "px";
+			       elem.style.top = Math.round(Math.random() * fullHeight) + "px";
+
+			      			      
+			       var elem1 = document.createElement("img");
+                   elem1.setAttribute("src", text);
+                   elem.appendChild(elem1);
 
 			 // changeProperty(elem, {'z-index' : 1});
 
+   
+	     		   
 
-			   console.log( "Noticias: ",elem);
+		    	   document.body.appendChild(elem);
 
-			   document.body.appendChild(elem);
 
-		      $('#area').val("");
+		        }
+		        else
+		        {
+		    
+		           var elem = document.createElement("div");
+		
+		   
+			       elem.textContent = text;
+			       elem.style.position = "absolute";
+			       elem.style.color = randomColor();
+			       elem.style.fontSize =  Math.floor((Math.random() * 30) + 15) + "px";
+			       elem.style.right = Math.round(Math.random() * fullWidth) + "px";
+			       elem.style.top = Math.round(Math.random() * fullHeight) + "px";
+
+			       Math.floor(Math.random()*fuentes.length)
+
+			       changeProperty(elem, {'font-family' : randomFuente()});
+
+			 // changeProperty(elem, {'z-index' : 1});
+
+   
+	     		 
+		    	   document.body.appendChild(elem);
+			    }
+
+               
+
+                var contenedor = $('#lista_deseos');
+                contenedor.append('<li>' +$('#area').val() + '</li>');
+
+
+		        $('#area').val("");
+		      
 			}
 		   
 		}
@@ -290,22 +429,33 @@ function capa() {
 
 		</script>
 
-
+  
 
 	</head>
 	<body>
 
+     
+
+
 		<div id="container" class="container" style="z-index: -1"> 
 		
+	<header><h1 id="hover">OTROS DESEITOS</h1></header>
+      <div id="about">
+      <ul  id="lista_deseos"> </ul>
+
+      </div>
 		
         <div id="info">
         	
+
 			<img src="tellme.gif" alt="tellme">
 				<br>
 				<br>
 				<br>
 				<br>
-		   		 <textarea id="area" name="message" rows="1"  ></textarea>
+				<form>
+		   		 <textarea id="area" type="text" name="message" rows="1"  ></textarea>
+		   		</form>
 		   		 <br>
 		   		  <br>
 		   		  <br>
@@ -318,7 +468,29 @@ function capa() {
 	        init();
 			animate();
 
-       </script>
+
+	jQuery(document).ready(function() {
+		jQuery('#hover').hover(function() {
+			jQuery('#about').addClass('mostrar');
+		},
+
+			jQuery('#about').hover(function() {
+				jQuery('#about').addClass('mostrar');
+		},
+
+
+
+			function() {
+			jQuery('#about').removeClass('mostrar');
+			}
+		)
+	);
+			
+
+	});
+
+ </script>
+
 	
 
 		
